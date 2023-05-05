@@ -3,6 +3,7 @@
 int16 id
 geometry_msgs/Point pos
 string type  # "adult", "child", "elder", "vehicle", "servicerobot"
+string distraction_type # "none", "kremer", "pam", "pam_modified"
 string yaml_file
 int16 number_of_peds
 float64 vmax
