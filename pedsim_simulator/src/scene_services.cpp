@@ -404,7 +404,20 @@ void SceneServices::addAgentClusterToPedsim(pedsim_msgs::Ped ped, std::vector<in
 
     // set type
     a->setType(static_cast<Ped::Tagent::AgentType>(stringToEnumIndex(ped.type, SCENE.agent_types)));
-
+    
+    // set distraction
+    if (ped.distraction_type == "kremer") {
+      a -> getStateMachine() -> activateDistraction(AgentStateMachine::AgentDistraction::DistractionKremer);
+    }
+    else if (ped.distraction_type == "pam") {
+      a -> getStateMachine() -> activateDistraction(AgentStateMachine::AgentDistraction::DistractionPam);
+    }
+    else if (ped.distraction_type == "pam_modified") {
+      a -> getStateMachine() -> activateDistraction(AgentStateMachine::AgentDistraction::DistractionPamModified);
+    }
+    else {
+      a -> getStateMachine() -> activateDistraction(AgentStateMachine::AgentDistraction::DistractionNone);
+    }
     // set agent radius
     int radius = 1.0;
     int radius_index = a->getType();

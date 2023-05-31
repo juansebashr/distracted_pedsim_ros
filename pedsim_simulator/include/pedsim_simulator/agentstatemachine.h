@@ -83,6 +83,13 @@ class AgentStateMachine : public QObject {
     StateWaitForTimer,
   } AgentState;
 
+  typedef enum {
+    DistractionNone,
+    DistractionKremer,
+    DistractionPam,
+    DistractionPamModified,
+  } AgentDistraction;
+
   // Constructor and Destructor
  public:
   AgentStateMachine(Agent* agentIn);
@@ -98,11 +105,15 @@ class AgentStateMachine : public QObject {
  public:
   void doStateTransition();
   AgentState getCurrentState();
+  AgentDistraction getCurrentDistraction();
   void activateState(AgentState stateIn);
+  void activateDistraction(AgentDistraction distractionIn);
   static QString stateToName(AgentState stateIn);
+  static std::string distractionToName(AgentDistraction distractionIn); 
 
  protected:
   void deactivateState(AgentState stateIn);
+  void deactivateDistraction();
   bool checkGroupForAttractions(AttractionArea** attractionOut = nullptr) const;
   double getRandomDuration(double baseTime);
 
@@ -111,6 +122,9 @@ class AgentStateMachine : public QObject {
   // → State Machine
   AgentState state;
   AgentState normalState;
+
+  // → Distraction State Machine
+  AgentDistraction distractionState;
 
   // → Waypoint Planner
   IndividualWaypointPlanner* individualPlanner;

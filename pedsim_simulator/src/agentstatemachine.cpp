@@ -56,6 +56,7 @@ AgentStateMachine::AgentStateMachine(Agent* agentIn) {
   currentEpisode = 0;
   // initialize state machine
   state = StateNone;
+  distractionState = DistractionNone;
 }
 
 AgentStateMachine::~AgentStateMachine() {
@@ -951,7 +952,7 @@ void AgentStateMachine::deactivateState(AgentState state) {
 
           AgentStateMachine* memberStateMachine = member->getStateMachine();
           disconnect(shoppingPlanner, SIGNAL(lostAttraction()),
-                     memberStateMachine, SLOT(loseAttraction()));
+                      memberStateMachine, SLOT(loseAttraction()));
         }
       }
 
@@ -991,6 +992,14 @@ void AgentStateMachine::deactivateState(AgentState state) {
     default:
       break;
   }
+}
+
+void AgentStateMachine::activateDistraction(AgentDistraction distractionStateIn) {
+  distractionState = distractionStateIn;
+}
+
+void AgentStateMachine::deactivateDistraction() {
+  distractionState = DistractionNone;
 }
 
 double AgentStateMachine::getRandomDuration(double baseTime)
@@ -1103,6 +1112,25 @@ QString AgentStateMachine::stateToName(AgentState stateIn) {
   }
 }
 
+std::string AgentStateMachine::distractionToName(AgentDistraction distractionIn) {
+  switch (distractionIn) {
+    case DistractionNone:
+      return "None";
+    case DistractionKremer:
+      return "Kremer";
+    case DistractionPam:
+      return "Pam";
+    case DistractionPamModified:
+      return "PamModified";
+    default:
+      return "UnknownDistraction";
+  }
+}
+
 AgentStateMachine::AgentState AgentStateMachine::getCurrentState() {
   return state;
+}
+
+AgentStateMachine::AgentDistraction AgentStateMachine::getCurrentDistraction() {
+  return distractionState;
 }

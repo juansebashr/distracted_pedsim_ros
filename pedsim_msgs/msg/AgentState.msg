@@ -2,6 +2,7 @@ Header header
 uint64 id
 string type
 string social_state
+string distraction_state
 geometry_msgs/Pose pose
 geometry_msgs/Twist twist
 pedsim_msgs/AgentForce forces

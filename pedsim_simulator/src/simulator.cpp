@@ -373,7 +373,9 @@ void Simulator::publishAgents()
     state.twist.linear.z = a->getvz();
 
     AgentStateMachine::AgentState sc = a->getStateMachine()->getCurrentState();
+    AgentStateMachine::AgentDistraction sd = a->getStateMachine()->getCurrentDistraction();
     state.social_state = agentStateToActivity(sc);
+    state.distraction_state = AgentStateMachine::distractionToName(sd);
 
     // Forces.
     pedsim_msgs::AgentForce agent_forces;
