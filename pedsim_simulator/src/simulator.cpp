@@ -119,6 +119,7 @@ bool Simulator::initializeSimulation()
 
   const QString scenefile = QString::fromStdString(scene_file_param);
   ScenarioReader scenario_reader;
+  
   if (scenario_reader.readFromFile(scenefile) == false)
   {
     ROS_INFO_STREAM(

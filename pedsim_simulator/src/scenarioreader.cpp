@@ -49,12 +49,11 @@ ScenarioReader::ScenarioReader() {
 }
 
 bool ScenarioReader::readFromFile(const QString& filename) {
-  ROS_DEBUG("Loading scenario file '%s'.", filename.toStdString().c_str());
-
+  ROS_INFO_STREAM("Loading scenario file " << filename.toStdString().c_str());
   // open file
   QFile file(filename);
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    ROS_DEBUG("Couldn't open scenario file!");
+    ROS_INFO_STREAM("Couldn't open scenario file!");
     return false;
   }
 
@@ -69,7 +68,7 @@ bool ScenarioReader::readFromFile(const QString& filename) {
   // check for errors
   if (xmlReader.hasError()) {
     // TODO - fix qstring and std string issues here to show error lines
-    ROS_DEBUG("Error while reading scenario file");
+    ROS_INFO_STREAM("Error while reading scenario file");
     return false;
   }
 
