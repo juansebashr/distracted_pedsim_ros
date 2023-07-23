@@ -1,6 +1,9 @@
-#!/usr/bin/env python
-import png, rospkg, numpy
+#!/usr/bin/env python3
 import xml.etree.ElementTree as xml
+
+import numpy
+import png
+import rospkg
 
 filename = "social_contexts.xml"
 
@@ -10,7 +13,7 @@ if not "/" in filename:
     path = rospack.get_path("pedsim_simulator") + "/scenarios/"
 
 filepath = path + filename
-print "Reading file " + filepath
+print("Reading file " + filepath)
 
 tree = xml.parse(filepath)
 root = tree.getroot()
@@ -24,24 +27,24 @@ obstacles = []
 for obstacle in root.findall("obstacle"):
     xlimits = int(obstacle.get("x1")), int(obstacle.get("x2"))
     ylimits = int(obstacle.get("y1")), int(obstacle.get("y2"))
-    obstacle = ( min(xlimits), min(ylimits), max(xlimits), max(ylimits))
+    obstacle = (min(xlimits), min(ylimits), max(xlimits), max(ylimits))
     xmin = min(xmin, obstacle[0])
     ymin = min(ymin, obstacle[1])
     xmax = max(xmax, obstacle[2])
     ymax = max(ymax, obstacle[3])
     obstacles.append(obstacle)
 
-print "Map dimensions: (%d, %d) -- (%d, %d)" % (xmin, ymin, xmax, ymax)
-assert(xmin >= 0)
-assert(ymin >= 0)
+print("Map dimensions: (%d, %d) -- (%d, %d)" % (xmin, ymin, xmax, ymax))
+assert xmin >= 0
+assert ymin >= 0
 width = xmax + 1
 height = ymax + 1
 
-grid = numpy.uint8( numpy.zeros( (height, width) ) )
+grid = numpy.uint8(numpy.zeros((height, width)))
 
 for obstacle in obstacles:
-    for x in xrange(obstacle[0], obstacle[2] + 1):
-        for y in xrange(obstacle[1], obstacle[3] + 1):
+    for x in range(obstacle[0], obstacle[2] + 1):
+        for y in range(obstacle[1], obstacle[3] + 1):
             grid[x, y] = 255
 
 outputFilename = filename
@@ -50,8 +53,8 @@ if ".xml" in outputFilename:
 else:
     outputFilename += ".png"
 
-print "Writing output to " + outputFilename
-f = open(outputFilename, 'wb')      # binary mode is important
+print("Writing output to " + outputFilename)
+f = open(outputFilename, "wb")  # binary mode is important
 w = png.Writer(width, height, greyscale=True)
 w.write(f, grid)
 f.close()

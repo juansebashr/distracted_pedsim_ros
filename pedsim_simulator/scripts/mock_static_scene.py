@@ -1,19 +1,16 @@
 #!/usr/bin/env python
 from __future__ import division
 
+import numpy as np
 import rospy
 import tf
-
-import numpy as np
-
+from pedsim_msgs.msg import AgentGroup, AgentGroups, AgentState, AgentStates
 from std_msgs.msg import Header
-from pedsim_msgs.msg import AgentState, AgentStates
-from pedsim_msgs.msg import AgentGroup, AgentGroups
 
 
 def create_header():
     header = Header()
-    header.frame_id = 'odom'
+    header.frame_id = "odom"
     header.stamp = rospy.Time.now()
     return header
 
@@ -22,21 +19,21 @@ def create_mock_state(track_id, x, y, angle):
     agent = AgentState()
     agent.id = track_id
 
-    theta = np.radians(angle) + np.pi / 2.
-    quaternion = tf.transformations.quaternion_from_euler(0., 0., theta)
+    theta = np.radians(angle) + np.pi / 2.0
+    quaternion = tf.transformations.quaternion_from_euler(0.0, 0.0, theta)
 
     agent.pose.position.x = x
-    print("position y",x)
+    print("position y", x)
     agent.pose.position.y = y
-    print("position x",y)
+    print("position x", y)
     agent.pose.orientation.x = quaternion[0]
     agent.pose.orientation.y = quaternion[1]
     agent.pose.orientation.z = quaternion[2]
     agent.pose.orientation.w = quaternion[3]
     agent.twist.linear.x = np.cos(theta)
-    print("linear x",agent.twist.linear.x)
+    print("linear x", agent.twist.linear.x)
     agent.twist.linear.y = np.sin(theta)
-    print("linear y",agent.twist.linear.y)
+    print("linear y", agent.twist.linear.y)
 
     return agent
 
@@ -92,12 +89,12 @@ PEOPLE = {
     47: create_mock_state(47, 18.6, 8.90, -90),
     48: create_mock_state(48, 20.4, 7.87, 85),
     49: create_mock_state(49, 15.684, 10.74, 75),
-    50: create_mock_state(50, 15.72, 14.51, 70)
+    50: create_mock_state(50, 15.72, 14.51, 70),
 }
 
 
 def mock_group(g_id, members):
-    """ Create a mock group with specified members """
+    """Create a mock group with specified members"""
     if not members:
         raise ValueError("Empty groups are not allowed")
 
@@ -105,8 +102,8 @@ def mock_group(g_id, members):
     group.header = create_header()
     group.group_id = g_id
     # group.age = rospy.Duration.from_sec(10.)
-    x = 0.
-    y = 0.
+    x = 0.0
+    y = 0.0
     for member in members:
         x = x + PEOPLE[member].pose.position.x
         y = y + PEOPLE[member].pose.position.y
@@ -119,10 +116,12 @@ def mock_group(g_id, members):
 
 def main():
     mock_agents_publisher = rospy.Publisher(
-        '/pedsim_simulator/simulated_agents', AgentStates, queue_size=1)
+        "/pedsim_simulator/simulated_agents", AgentStates, queue_size=1
+    )
     mock_groups_publisher = rospy.Publisher(
-        '/pedsim_simulator/simulated_groups', AgentGroups, queue_size=1)
-    rospy.init_node('mock_static_scene')
+        "/pedsim_simulator/simulated_groups", AgentGroups, queue_size=1
+    )
+    rospy.init_node("mock_static_scene")
     rate = rospy.Rate(10)
     counter = 0
 
@@ -160,5 +159,5 @@ def main():
         rate.sleep()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright (c) 2011, Willow Garage, Inc.
 # All rights reserved.
@@ -30,14 +30,13 @@
 # Modified the topics for pedsim compartibility and to avoid installing
 # all turtlebot software for simple keyboard teleop
 
-import rospy
-
-from geometry_msgs.msg import Twist
-
-import sys
 import select
+import sys
 import termios
 import tty
+
+import rospy
+from geometry_msgs.msg import Twist
 
 msg = """
 Control the PedSim robot!
@@ -57,23 +56,23 @@ CTRL-C to quit
 """
 
 moveBindings = {
-    'i': (1, 0),
-    'o': (1, -1),
-    'j': (0, 1),
-    'l': (0, -1),
-    'u': (1, 1),
-    ',': (-1, 0),
-    '.': (-1, 1),
-    'm': (-1, -1),
+    "i": (1, 0),
+    "o": (1, -1),
+    "j": (0, 1),
+    "l": (0, -1),
+    "u": (1, 1),
+    ",": (-1, 0),
+    ".": (-1, 1),
+    "m": (-1, -1),
 }
 
 speedBindings = {
-    'q': (1.1, 1.1),
-    'z': (.9, .9),
-    'w': (1.1, 1),
-    'x': (.9, 1),
-    'e': (1, 1.1),
-    'c': (1, .9),
+    "q": (1.1, 1.1),
+    "z": (0.9, 0.9),
+    "w": (1.1, 1),
+    "x": (0.9, 1),
+    "e": (1, 1.1),
+    "c": (1, 0.9),
 }
 
 
@@ -83,13 +82,13 @@ def getKey():
     if rlist:
         key = sys.stdin.read(1)
     else:
-        key = ''
+        key = ""
 
     termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
     return key
 
 
-speed = .2
+speed = 0.2
 turn = 1
 
 
@@ -100,8 +99,8 @@ def vels(speed, turn):
 if __name__ == "__main__":
     settings = termios.tcgetattr(sys.stdin)
 
-    rospy.init_node('pedsim_keyboard_teleop')
-    pub = rospy.Publisher('~cmd_vel', Twist, queue_size=5)
+    rospy.init_node("pedsim_keyboard_teleop")
+    pub = rospy.Publisher("~cmd_vel", Twist, queue_size=5)
 
     x = 0
     th = 0
@@ -113,24 +112,24 @@ if __name__ == "__main__":
     control_speed = 0
     control_turn = 0
     try:
-        print msg
-        print vels(speed, turn)
-        while(1):
+        print(msg)
+        print(vels(speed, turn))
+        while 1:
             key = getKey()
-            if key in moveBindings.keys():
+            if key in list(moveBindings.keys()):
                 x = moveBindings[key][0]
                 th = moveBindings[key][1]
                 count = 0
-            elif key in speedBindings.keys():
+            elif key in list(speedBindings.keys()):
                 speed = speed * speedBindings[key][0]
                 turn = turn * speedBindings[key][1]
                 count = 0
 
-                print vels(speed, turn)
-                if (status == 14):
-                    print msg
+                print(vels(speed, turn))
+                if status == 14:
+                    print(msg)
                 status = (status + 1) % 15
-            elif key == ' ' or key == 'k':
+            elif key == " " or key == "k":
                 x = 0
                 th = 0
                 control_speed = 0
@@ -140,7 +139,7 @@ if __name__ == "__main__":
                 if count > 4:
                     x = 0
                     th = 0
-                if (key == '\x03'):
+                if key == "\x03":
                     break
 
             target_speed = speed * x
@@ -170,7 +169,7 @@ if __name__ == "__main__":
             pub.publish(twist)
 
     except:
-        print e
+        print(e)
 
     finally:
         twist = Twist()
