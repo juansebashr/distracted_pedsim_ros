@@ -12,11 +12,11 @@
 #define LIBEXPORT
 #endif
 
+#include <nav_msgs/OccupancyGrid.h>
 #include <list>
 #include <map>
 #include <set>
 #include <vector>
-#include <nav_msgs/OccupancyGrid.h>
 
 using namespace std;
 
@@ -58,46 +58,46 @@ class Ttree;
 /// trigger this collection process periodically by calling cleanup() manually.
 /// \author  chgloor
 /// \date    2010-02-12
-class LIBEXPORT Tscene {
-  friend class Ped::Tagent;
-  friend class Ped::Ttree;
+class LIBEXPORT Tscene
+{
+    friend class Ped::Tagent;
+    friend class Ped::Ttree;
 
- public:
-  Tscene();
-  Tscene(double left, double top, double width, double height);
-  virtual ~Tscene();
+   public:
+    Tscene();
+    Tscene(double left, double top, double width, double height);
+    virtual ~Tscene();
 
-  virtual void clear();
+    virtual void clear();
 
-  virtual void addAgent(Tagent* a);
-  virtual void addObstacle(Tobstacle* o);
-  virtual void addWaypoint(Twaypoint* w);
-  virtual bool removeAgent(Tagent* a);
-  virtual bool removeObstacle(Tobstacle* o);
-  virtual bool removeWaypoint(Twaypoint* w);
+    virtual void addAgent(Tagent* a);
+    virtual void addObstacle(Tobstacle* o);
+    virtual void addWaypoint(Twaypoint* w);
+    virtual bool removeAgent(Tagent* a);
+    virtual bool removeObstacle(Tobstacle* o);
+    virtual bool removeWaypoint(Twaypoint* w);
 
-  virtual void removeAllObstacles();
+    virtual void removeAllObstacles();
 
-  virtual void cleanup();
-  virtual void moveAgents(double h);
+    virtual void cleanup();
+    virtual void moveAgents(double h);
 
-  set<const Ped::Tagent*> getNeighbors(double x, double y, double dist) const;
-  const vector<Tagent*>& getAllAgents() const { return agents; };
+    set<const Ped::Tagent*> getNeighbors(double x, double y, double dist) const;
+    const vector<Tagent*>& getAllAgents() const { return agents; };
 
-  nav_msgs::OccupancyGrid map_;
+    nav_msgs::OccupancyGrid map_;
 
- protected:
-  vector<Tagent*> agents;
-  vector<Tobstacle*> obstacles;
-  vector<Twaypoint*> waypoints;
-  map<const Ped::Tagent*, Ttree*> treehash;
-  Ttree* tree;
+   protected:
+    vector<Tagent*> agents;
+    vector<Tobstacle*> obstacles;
+    vector<Twaypoint*> waypoints;
+    map<const Ped::Tagent*, Ttree*> treehash;
+    Ttree* tree;
 
-  void placeAgent(const Ped::Tagent* a);
-  void moveAgent(const Ped::Tagent* a);
-  void getNeighbors(std::vector<const Ped::Tagent*>& neighborList, double x,
-                    double y, double dist) const;
-  void getMap();
+    void placeAgent(const Ped::Tagent* a);
+    void moveAgent(const Ped::Tagent* a);
+    void getNeighbors(std::vector<const Ped::Tagent*>& neighborList, double x, double y, double dist) const;
+    void getMap();
 };
-}
+}  // namespace Ped
 #endif

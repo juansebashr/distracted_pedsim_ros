@@ -13,12 +13,16 @@ int Ped::Twaypoint::staticid = 0;
 /// \param   xIn The x coordinate of the waypoint
 /// \param   yIn The y coordinate of the waypoint
 Ped::Twaypoint::Twaypoint(double xIn, double yIn)
-    : id(staticid++), position(xIn, yIn), type(Ped::Twaypoint::AreaWaypoint) {}
+    : id(staticid++), position(xIn, yIn), type(Ped::Twaypoint::AreaWaypoint)
+{
+}
 
 /// Constructor: Sets some intial values.
 /// \param   posIn The position of the waypoint
 Ped::Twaypoint::Twaypoint(const Ped::Tvector& posIn)
-    : id(staticid++), position(posIn), type(Ped::Twaypoint::AreaWaypoint) {}
+    : id(staticid++), position(posIn), type(Ped::Twaypoint::AreaWaypoint)
+{
+}
 
 /// Destructor
 /// \author  chgloor
@@ -29,36 +33,34 @@ Ped::Twaypoint::~Twaypoint() {}
 /// \param   *reached Set to true if the agent has reached the waypoint in this
 /// call.
 /// \return  Tvector The calculated force
-Ped::Tvector Ped::Twaypoint::getForce(const Ped::Tagent& agent,
-                                      Ped::Tvector* desiredDirectionOut,
-                                      bool* reachedOut) const {
-  // set default output parameters
-  if (reachedOut != NULL) *reachedOut = false;
-  if (desiredDirectionOut != NULL) *desiredDirectionOut = Ped::Tvector();
+Ped::Tvector Ped::Twaypoint::getForce(const Ped::Tagent& agent, Ped::Tvector* desiredDirectionOut,
+                                      bool* reachedOut) const
+{
+    // set default output parameters
+    if (reachedOut != NULL) *reachedOut = false;
+    if (desiredDirectionOut != NULL) *desiredDirectionOut = Ped::Tvector();
 
-  Ped::Tvector agentPos = agent.getPosition();
-  Ped::Tvector destination = closestPoint(agentPos, reachedOut);
-  Ped::Tvector diff = destination - agentPos;
+    Ped::Tvector agentPos = agent.getPosition();
+    Ped::Tvector destination = closestPoint(agentPos, reachedOut);
+    Ped::Tvector diff = destination - agentPos;
 
-  Ped::Tvector desiredDirection = diff.normalized();
-  Tvector force = (desiredDirection * agent.getVmax() - agent.getVelocity()) /
-                  agent.getRelaxationTime();
+    Ped::Tvector desiredDirection = diff.normalized();
+    Tvector force = (desiredDirection * agent.getVmax() - agent.getVelocity()) / agent.getRelaxationTime();
 
-  if (desiredDirectionOut != NULL) *desiredDirectionOut = desiredDirection;
+    if (desiredDirectionOut != NULL) *desiredDirectionOut = desiredDirection;
 
-  return force;
+    return force;
 }
 
-Ped::Tvector Ped::Twaypoint::closestPoint(const Ped::Tvector& p,
-                                          bool* withinWaypoint) const {
-  return position;
-}
+Ped::Tvector Ped::Twaypoint::closestPoint(const Ped::Tvector& p, bool* withinWaypoint) const { return position; }
 
-bool Ped::Twaypoint::isInteractive() {
-  auto it = find(interactiveTypes.begin(), interactiveTypes.end(), type);
-  // If element was found
-  if (it != interactiveTypes.end()) {
-    return true;
-  }
-  return false;
+bool Ped::Twaypoint::isInteractive()
+{
+    auto it = find(interactiveTypes.begin(), interactiveTypes.end(), type);
+    // If element was found
+    if (it != interactiveTypes.end())
+    {
+        return true;
+    }
+    return false;
 }
